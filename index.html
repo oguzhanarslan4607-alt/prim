@@ -597,7 +597,18 @@
                 // Kredi Kartı Logic
                 const hesaba = parseFloat(hesabaInput.value) || 0;
                 const kdvHaric = hesaba / kdvOran;
-                const prim = kdvHaric * 0.21; // %21 sabit
+                
+                // DİNAMİK ORAN BELİRLEME
+                const urun = urunSelect.value;
+                let oran = 21; // Varsayılan (Diğer ürünler için)
+                
+                if (urun === "RO - Platinum" || urun === "RO - Silver") {
+                    oran = 13;
+                } else if (urun === "Klima-12" || urun === "Klima-18") {
+                    oran = 11;
+                }
+
+                const prim = kdvHaric * (oran / 100);
 
                 document.getElementById('resKdvHaric').innerText = `₺${formatCurrency(kdvHaric)}`;
                 
@@ -605,7 +616,7 @@
                 rowNakit.classList.remove('hidden');
                 rowSenet.classList.add('hidden'); 
                 rowNakit.querySelector('.flex-col span').innerText = "Kredi Kartı Primi";
-                document.getElementById('labelNakitOran').innerText = "%21";
+                document.getElementById('labelNakitOran').innerText = `%${oran}`;
                 document.getElementById('resNakitPrim').innerText = `₺${formatCurrency(prim)}`;
                 document.getElementById('resToplamPrim').innerText = `₺${formatCurrency(prim)}`;
 
@@ -621,8 +632,8 @@
                         <span>= ₺${formatCurrency(kdvHaric)}</span>
                     </div>
                     <div class="flex justify-between mt-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                        <span>Prim (%21):</span>
-                        <span>₺${formatCurrency(kdvHaric)} x 0.21 = <strong>₺${formatCurrency(prim)}</strong></span>
+                        <span>Prim (%${oran}):</span>
+                        <span>₺${formatCurrency(kdvHaric)} x 0.${oran} = <strong>₺${formatCurrency(prim)}</strong></span>
                     </div>
                 `;
 
